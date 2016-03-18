@@ -2,64 +2,66 @@
 # then the entire array is sorted, wher n - m is minimized.
 # bubble sort the array, every time you swap you keep track of where you swapped (smallest and largest index)
 require 'byebug'
-def subsort_indices(a)
-  start = last_in_order_start(a)
-  return [0,0] if start == a.length - 1
-  min = a[start]
-  last = first_in_order_end(a)
-  max = a[last]
 
-  i = start
-  while i < last # everything in middle should be min < x > max if sorted.
-    if a[i] < min
-      min = a[i]
-    elsif a[i] > max
-      max = a[i]
+def subsort_indices_2(arr)
+  #find first index that is out of order
+  idx1 = left_first_out_order(arr)
+  return nil if idx1.nil?
+  #find first index from right that is out of order
+  idx2 = right_first_out_order(arr)
+  #Find the min and max number in the middle (out of order sequence)
+  min, max = extremes(arr, idx1, idx2)
+  #start at idx1, move left until you find a number <= min
+  idx1 -=1
+  while idx1 > 0
+    if arr[idx1] <= min
+      break
     end
+    idx1 -=1
+  end
+  # start at idx2, move right until you find a number >= max, return one before it!
+  while idx2 < arr.length - 1
+    if arr[idx2 + 1] >= max
+      break
+    end
+    idx2 += 1
+  end
+  [idx1, idx2]
+end
+
+def left_first_out_order(arr)
+  i = 1
+  while i < arr.length - 1
+    return i if arr[i] < arr[i-1]
     i += 1
   end
-
-  if min != a[start]
-    i = 0
-    while i < a.length
-      if min <= a[i]
-        start = i
-        break
-      end
-      i += 1
-    end
-  end
-
-  if max != a[last]
-    i = a.length - 1
-    while i >= 0
-      if max > a[i]
-        last = i
-        break
-      end
-      i -= 1
-    end
-  end
-  [start, last]
+  nil # No items are out of order!
 end
 
-def last_in_order_start(a)
-  i = 0
-  while i < a.length - 1
-    break if a[i] > a[i + 1]
+def right_first_out_order(arr)
+  i = arr.length - 2
+  while i >= 0
+    return i if arr[i] > arr[i+1]
+    i -=1
+  end
+  nil
+end
+
+def extremes(arr, idx1, idx2)
+  # debugger
+  min = nil
+  max = nil
+  i = idx1
+  while i <= idx2
+    min ||= arr[i]
+    max ||= arr[i]
+    min = [arr[i], min].min
+    max = [arr[i], max].max
     i += 1
   end
-  i
+  [min, max]
 end
 
-def first_in_order_end(a)
-  i = a.length - 1
-  while i > 0
-    break if a[i - 1] > a[i]
-    i -= 1
-  end
-  i
-end
 
 #O(n^2)
 def subsort_indices_naive(a)
@@ -87,7 +89,7 @@ end
 # O N2
 a = [1,2,4,7,10,11,7,12,6,7,16,18,19]
 # p subsort_indices_naive(a)
-p subsort_indices(a)
+p subsort_indices_2(a)
 b = [5, 6, 10, 15]
 # p subsort_indices_naive(b)
-p subsort_indices(b)
+p subsort_indices_2(b)

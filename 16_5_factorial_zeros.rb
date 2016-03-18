@@ -6,7 +6,7 @@ def zeros_n_factorial(n)
 
   factor = 5 # will increase 5, 25, 125
   while factor < n
-    count += n / factor
+    count += n / factor #number of 5's between 5 and n. 25 counts as 2, and will get counted twice because factor will equal 5, then 25. 
     factor *= 5
   end
   count

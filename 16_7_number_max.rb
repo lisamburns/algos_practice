@@ -1,13 +1,14 @@
 # Write method that finds max of two numbers, but you can't use if else or any other comparison operator
 
 def number_max(a, b)
-  k = a / b # either > 0 or 0
-  k = k / k # is either 0 if a < b, or 1 if a >= b
-  not_k = 1 - k # 0 if k = 1, 1 if k = 0
-
-  a * k + b * not_k
+  sum = a + b
+  diff = (a - b).abs
+  (sum + diff)/2
 end
 
+# (5 + 2) = 7
+# diff = 3
+# max = (7 + 3)/2
 puts number_max( 5, 2)
 puts number_max( 99, 23)
 puts number_max( 5, 20)
